@@ -146,16 +146,8 @@ int main()
         int amount = int_from_json(nondet_picks["amount"]["value"]);
         print_bank_state(bank_state);
         cout << "deposit(" << bank_state.next_id << ", "<< depositor << "," << amount << ")" << endl;
-        if (amount <= 0)
-        {
-          error = "Amount should be greater than zero";
-          break;
-        }
-        else
-        {
-          deposit(bank_state, depositor, amount);
-          break;
-        }
+        error =  deposit(bank_state, depositor, amount);
+        break;
       }
       case Action::Withdraw: // Lógica baseada no quint
       {
@@ -164,21 +156,8 @@ int main()
         cout << "withdraw(" << bank_state.next_id << ", " << withdrawer
              << ", " << amount << ")" << endl;
         print_bank_state(bank_state);
-        if (amount <= 0)
-        {
-          error = "Amount should be greater than zero";
-          break;
-        }
-        else if (bank_state.balances[withdrawer] < amount)
-        {
-          error = "Balance is too low";
-          break;
-        }
-        else
-        {
-          withdraw(bank_state, withdrawer, amount);
-          break;
-        }
+        error = withdraw(bank_state, withdrawer, amount);
+        break;
       }
       case Action::Transfer: // Lógica baseada no quint
       {
@@ -189,21 +168,8 @@ int main()
         cout << "transfer(" << bank_state.next_id << ", " << sender
              << receiver << amount << ")" << endl;
 
-        if (amount <= 0)
-        {
-          error = "Amount should be greater than zero";
-          break;
-        }
-        else if (bank_state.balances[sender] < amount)
-        {
-          error = "Balance is too low";
-          break;
-        }
-        else
-        {
-          transfer(bank_state, sender, receiver, amount);
-          break;
-        }
+        error = transfer(bank_state, sender, receiver, amount);
+        break;
       }
       case Action::BuyInvestment: // Lógica baseada no quint
       {
@@ -213,21 +179,8 @@ int main()
         cout << "buy_investment(" << bank_state.next_id << ", " << buyer
              << ", " << amount << ")" << endl;
 
-        if (amount <= 0)
-        {
-          error = "Amount should be greater than zero";
-          break;
-        }
-        else if (bank_state.balances[buyer] < amount)
-        {
-          error = "Balance is too low";
-          break;
-        }
-        else
-        {
-          buy_investment(bank_state, buyer, amount);
-          break;
-        }
+        error = buy_investment(bank_state, buyer, amount);
+        break;
       }
       case Action::SellInvestment:
       {
@@ -236,22 +189,10 @@ int main()
         int id = int_from_json(nondet_picks["id"]["value"]);
         cout << "investment_id: " << id << endl;
 
-        auto it = bank_state.investments.find(id);
         print_bank_state(bank_state);
         cout << "sell_investment(" << bank_state.next_id << "," << seller << ","  << id << ")" << endl;
-        if (it == bank_state.investments.end()) {
-            error = "No investment with this id";
-            break;
-        } else {
-            Investment investment = it->second;
-            if (investment.owner != seller) {
-                error = "Seller can't sell an investment they don't own";
-                break;
-            } else {
-                sell_investment(bank_state, seller, id);
-                break;
-            }
-        }
+        error = sell_investment(bank_state, seller, id);
+        break;
       }
       default:
       {
