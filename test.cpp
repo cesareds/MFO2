@@ -83,7 +83,7 @@ BankState bank_state_from_json(json state)
 
 //////////
 
-void print_balancos(map<string, int> &b)
+void print_balancos(map<string, int> &b) // Criamos
 {
   cout << "Balances: " << endl;
   for (auto it : b)
@@ -91,7 +91,7 @@ void print_balancos(map<string, int> &b)
     cout << "Nome: " << it.first << " | Valor: " << it.second << endl;
   }
 }
-void print_investimentos(map<int, Investment> &i)
+void print_investimentos(map<int, Investment> &i) // Criamos
 {
   cout << "Investimentos: " << endl;
   for (auto it : i)
@@ -103,7 +103,7 @@ void print_investimentos(map<int, Investment> &i)
   }
 }
 
-void print_bank_state(BankState &bank_state)
+void print_bank_state(BankState &bank_state) // Criamos
 {
   cout
       << "Next Id: " << bank_state.next_id
@@ -140,12 +140,12 @@ int main()
         cout << "initializing" << endl;
         break;
       }
-      case Action::Deposit:
+      case Action::Deposit: // Lógica baseada no quint
       {
-        cout << "Deposit" << endl;
         string depositor = nondet_picks["depositor"]["value"];
         int amount = int_from_json(nondet_picks["amount"]["value"]);
-        cout << "deposit(" << bank_state.next_id << ", " << amount << ")," << endl;
+        print_bank_state(bank_state);
+        cout << "deposit(" << bank_state.next_id << ", "<< depositor << "," << amount << ")" << endl;
         if (amount <= 0)
         {
           error = "Amount should be greater than zero";
@@ -156,46 +156,38 @@ int main()
           deposit(bank_state, depositor, amount);
           break;
         }
-
-        deposit(bank_state, depositor, amount);
-        break;
       }
-      case Action::Withdraw:
+      case Action::Withdraw: // Lógica baseada no quint
       {
-        cout << "withdraw" << endl;
-
         string withdrawer = nondet_picks["withdrawer"]["value"];
         int amount = int_from_json(nondet_picks["amount"]["value"]);
         cout << "withdraw(" << bank_state.next_id << ", " << withdrawer
              << ", " << amount << ")" << endl;
+        print_bank_state(bank_state);
         if (amount <= 0)
         {
           error = "Amount should be greater than zero";
-          cout << "FOI1" << endl;
           break;
         }
         else if (bank_state.balances[withdrawer] < amount)
         {
           error = "Balance is too low";
-          cout << "FOI2" << endl;
           break;
         }
         else
         {
-          cout << "FOI3" << endl;
           withdraw(bank_state, withdrawer, amount);
           break;
         }
       }
-      case Action::Transfer:
+      case Action::Transfer: // Lógica baseada no quint
       {
-        cout << "transfer" << endl;
-
         string sender = nondet_picks["sender"]["value"];
         string receiver = nondet_picks["receiver"]["value"];
         int amount = int_from_json(nondet_picks["amount"]["value"]);
+        print_bank_state(bank_state);
         cout << "transfer(" << bank_state.next_id << ", " << sender
-             << receiver << amount << ")," << endl;
+             << receiver << amount << ")" << endl;
 
         if (amount <= 0)
         {
@@ -213,14 +205,13 @@ int main()
           break;
         }
       }
-      case Action::BuyInvestment:
+      case Action::BuyInvestment: // Lógica baseada no quint
       {
-        cout << "buy" << endl;
-
         string buyer = nondet_picks["buyer"]["value"];
         int amount = int_from_json(nondet_picks["amount"]["value"]);
+        print_bank_state(bank_state);
         cout << "buy_investment(" << bank_state.next_id << ", " << buyer
-             << ", " << amount << ")," << endl;
+             << ", " << amount << ")" << endl;
 
         if (amount <= 0)
         {
@@ -246,7 +237,8 @@ int main()
         cout << "investment_id: " << id << endl;
 
         auto it = bank_state.investments.find(id);
-        print_investimentos(bank_state.investments);
+        print_bank_state(bank_state);
+        cout << "sell_investment(" << bank_state.next_id << "," << seller << ","  << id << ")" << endl;
         if (it == bank_state.investments.end()) {
             error = "No investment with this id";
             break;
@@ -290,8 +282,8 @@ int main()
       cout << "----------------------------------------------------"
            << endl;
 
-      assert(expected_error == error);
-      assert(expected_bank_state.balances == bank_state.balances);
+      assert(expected_error == error); // Asserts
+      assert(expected_bank_state.balances == bank_state.balances); // Assert
     }
   }
   return 0;
