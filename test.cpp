@@ -140,6 +140,7 @@ int main()
         cout << "initializing" << endl;
         break;
       }
+
       case Action::Deposit: // Lógica baseada no quint
       {
         string depositor = nondet_picks["depositor"]["value"];
@@ -149,6 +150,7 @@ int main()
         error =  deposit(bank_state, depositor, amount);
         break;
       }
+      
       case Action::Withdraw: // Lógica baseada no quint
       {
         string withdrawer = nondet_picks["withdrawer"]["value"];
@@ -159,6 +161,9 @@ int main()
         error = withdraw(bank_state, withdrawer, amount);
         break;
       }
+
+
+
       case Action::Transfer: // Lógica baseada no quint
       {
         string sender = nondet_picks["sender"]["value"];
@@ -171,6 +176,7 @@ int main()
         error = transfer(bank_state, sender, receiver, amount);
         break;
       }
+
       case Action::BuyInvestment: // Lógica baseada no quint
       {
         string buyer = nondet_picks["buyer"]["value"];
@@ -182,6 +188,8 @@ int main()
         error = buy_investment(bank_state, buyer, amount);
         break;
       }
+
+
       case Action::SellInvestment:
       {
         string seller = nondet_picks["seller"]["value"];
@@ -194,6 +202,12 @@ int main()
         error = sell_investment(bank_state, seller, id);
         break;
       }
+
+
+
+
+
+
       default:
       {
         cout << "Unknown action " << action << endl;
@@ -229,3 +243,10 @@ int main()
   }
   return 0;
 }
+
+
+
+
+
+
+
